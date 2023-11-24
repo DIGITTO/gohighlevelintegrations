@@ -1,0 +1,79 @@
+// Add action hook to send contact information to Go High Level CRM on WooCommerce new order
+add_action('woocommerce_new_order', 'send_contact_information_to_highlevel', 10, 1);
+
+function send_contact_information_to_highlevel($order_id) {
+    // Get the order object
+    $order = wc_get_order($order_id);
+
+    // Get customer information
+    $first_name = $order->get_billing_first_name();
+    $last_name = $order->get_billing_last_name();
+    $email = $order->get_billing_email();
+    $phone = $order->get_billing_phone();
+
+    // Get address information
+    $address = $order->get_billing_address_1();
+    $city = $order->get_billing_city();
+    $state = $order->get_billing_state();
+    $country = $order->get_billing_country();
+    $postal_code = $order->get_billing_postcode();
+
+    // Prepare data for Go High Level CRM
+    $data = array(
+        'firstName'   => $first_name,
+        'lastName'    => $last_name,
+        'name'        => $first_name . ' ' . $last_name,
+        'email'       => $email,
+        'phone'       => $phone,
+        'dateOfBirth' => '', // Add date of birth if available
+        'address1'    => $address,
+        'city'        => $city,
+        'state'       => $state,
+        'country'     => $country,
+        'postalCode'  => $postal_code,
+        'companyName' => '', // Add company name if available
+        'website'     => '', // Add website if available
+        'tags'        => array(
+            'ea deserunt culpa laboris',
+            'quis in veniam qui',
+        ),
+        'source'      => 'WooCommerce Order',
+        'customField' => array(
+            '__custom_field_id__' => 'ea d',
+        ),
+    );
+
+    // Convert data to JSON format
+    $json_data = json_encode($data);
+
+    // Log order ID, API request data, and GHL API response to a general error log file
+    error_log('Order ID: ' . $order_id);
+    error_log('API Request Data: ' . $json_data);
+
+    // Replace with the actual Go High Level CRM API endpoint for creating or updating contacts
+    $highlevel_api_endpoint = 'https://rest.gohighlevel.com/v1/contacts';
+
+    // Set your Go High Level CRM API key here
+    $highlevel_api_key = 'YOUR_API_KEY_HERE';
+
+    // Send data to Go High Level CRM using API
+    $response = wp_remote_request($highlevel_api_endpoint, array(
+        'method'    => 'POST',
+        'body'      => $json_data,
+        'headers'   => array(
+            'Content-Type'  => 'application/json',
+            'Authorization' => 'Bearer ' . $highlevel_api_key,
+        ),
+    ));
+
+    // Log GHL API response to the general error log file
+    error_log('GHL API Response: ' . wp_json_encode($response));
+    
+    // Check for errors or handle the API response as needed
+    if (is_wp_error($response)) {
+        error_log('Error sending data to Go High Level CRM: ' . $response->get_error_message());
+    } else {
+        // Log the API response for debugging to the general error log file
+        error_log('Go High Level CRM API Response: ' . wp_json_encode($response));
+    }
+}
