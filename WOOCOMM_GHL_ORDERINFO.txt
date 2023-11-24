@@ -34,8 +34,8 @@ function send_contact_information_to_highlevel($order_id) {
         'companyName' => '', // Add company name if available
         'website'     => '', // Add website if available
         'tags'        => array(
-            'ea deserunt culpa laboris',
-            'quis in veniam qui',
+            'Site Order',
+            'Woocommerce',
         ),
         'source'      => 'WooCommerce Order',
         'customField' => array(
@@ -46,15 +46,15 @@ function send_contact_information_to_highlevel($order_id) {
     // Convert data to JSON format
     $json_data = json_encode($data);
 
-    // Log order ID, API request data, and GHL API response to a general error log file
+    // Log order ID, API request data, and GHL API response
     error_log('Order ID: ' . $order_id);
     error_log('API Request Data: ' . $json_data);
 
     // Replace with the actual Go High Level CRM API endpoint for creating or updating contacts
     $highlevel_api_endpoint = 'https://rest.gohighlevel.com/v1/contacts';
 
-    // Set your Go High Level CRM API key here
-    $highlevel_api_key = 'YOUR_API_KEY_HERE';
+    // Replace with your Go High Level CRM API key
+    $highlevel_api_key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2NhdGlvbl9pZCI6InNlVzVnMVlhUzZOYm43NDFkaE50IiwiY29tcGFueV9pZCI6IjNFZ0VleGRLbmIxcFlmODVTUFk5IiwidmVyc2lvbiI6MSwiaWF0IjoxNjk3NTA0NzkwNzY3LCJzdWIiOiJ1c2VyX2lkIn0.VnUxVpZca_wgwS5d4X51DwPs8H--U8bruVFouGX1fpk';
 
     // Send data to Go High Level CRM using API
     $response = wp_remote_request($highlevel_api_endpoint, array(
@@ -66,14 +66,14 @@ function send_contact_information_to_highlevel($order_id) {
         ),
     ));
 
-    // Log GHL API response to the general error log file
+    // Log GHL API response
     error_log('GHL API Response: ' . wp_json_encode($response));
     
     // Check for errors or handle the API response as needed
     if (is_wp_error($response)) {
         error_log('Error sending data to Go High Level CRM: ' . $response->get_error_message());
     } else {
-        // Log the API response for debugging to the general error log file
+        // Log the API response for debugging
         error_log('Go High Level CRM API Response: ' . wp_json_encode($response));
     }
 }
