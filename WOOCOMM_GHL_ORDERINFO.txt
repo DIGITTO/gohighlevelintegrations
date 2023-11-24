@@ -54,7 +54,7 @@ function send_contact_information_to_highlevel($order_id) {
     $highlevel_api_endpoint = 'https://rest.gohighlevel.com/v1/contacts';
 
     // Replace with your Go High Level CRM API key
-    $highlevel_api_key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2NhdGlvbl9pZCI6InNlVzVnMVlhUzZOYm43NDFkaE50IiwiY29tcGFueV9pZCI6IjNFZ0VleGRLbmIxcFlmODVTUFk5IiwidmVyc2lvbiI6MSwiaWF0IjoxNjk3NTA0NzkwNzY3LCJzdWIiOiJ1c2VyX2lkIn0.VnUxVpZca_wgwS5d4X51DwPs8H--U8bruVFouGX1fpk';
+    $highlevel_api_key = 'Your Sub Account api key here';
 
     // Send data to Go High Level CRM using API
     $response = wp_remote_request($highlevel_api_endpoint, array(
